@@ -152,8 +152,15 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const utmSource = params.get("utm_source");
+      const materialId = params.get("material_id");
+      
       if (utmSource) {
-        setClickSource(utmSource);
+        // 소재 번호가 있으면 함께 포함하여 추적
+        if (materialId) {
+          setClickSource(`${utmSource}_material_${materialId}`);
+        } else {
+          setClickSource(utmSource);
+        }
       }
     }
   }, []);
@@ -163,8 +170,15 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const utmSource = params.get("utm_source");
+      const materialId = params.get("material_id");
+      
       if (utmSource) {
-        setClickSource(utmSource);
+        // 소재 번호가 있으면 함께 포함하여 추적
+        if (materialId) {
+          setClickSource(`${utmSource}_material_${materialId}`);
+        } else {
+          setClickSource(utmSource);
+        }
       } else {
         setClickSource(defaultSource);
       }
