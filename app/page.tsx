@@ -390,6 +390,11 @@ export default function Home() {
               spaceBetween: 24,
               centeredSlides: false,
             },
+            1920: {
+              slidesPerView: 2.3,
+              spaceBetween: 70,
+              centeredSlides: false,
+            },
           }}
         >
           <SwiperSlide>
