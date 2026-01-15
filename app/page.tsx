@@ -12,6 +12,7 @@ export default function Home() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showCompletedModal, setShowCompletedModal] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [mainImageLoaded, setMainImageLoaded] = useState(false);
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -175,6 +176,38 @@ export default function Home() {
       // Image 객체로도 미리 로드 (이중 보장)
       const img = document.createElement("img");
       img.src = "/check.gif";
+    }
+  }, []);
+
+  // 메인 이미지와 코인 이미지 미리 로드
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // 메인 이미지 preload
+      const mainLink = document.createElement("link");
+      mainLink.rel = "preload";
+      mainLink.href = "/main.gif";
+      mainLink.as = "image";
+      document.head.appendChild(mainLink);
+
+      // 코인 이미지들 preload
+      const leftCoinLink = document.createElement("link");
+      leftCoinLink.rel = "preload";
+      leftCoinLink.href = "/left_coin.png";
+      leftCoinLink.as = "image";
+      document.head.appendChild(leftCoinLink);
+
+      const rightCoinLink = document.createElement("link");
+      rightCoinLink.rel = "preload";
+      rightCoinLink.href = "/right_coin.png";
+      rightCoinLink.as = "image";
+      document.head.appendChild(rightCoinLink);
+
+      // 메인 이미지 로드 완료 감지
+      const mainImg = document.createElement("img");
+      mainImg.onload = () => {
+        setMainImageLoaded(true);
+      };
+      mainImg.src = "/main.gif";
     }
   }, []);
 
@@ -436,17 +469,22 @@ export default function Home() {
           className={styles.main_gif}
           unoptimized={true}
           priority
+          onLoad={() => setMainImageLoaded(true)}
         />
-        <img
-          src="/left_coin.png"
-          alt="left coin"
-          className={styles.left_coin}
-        />
-        <img
-          src="/right_coin.png"
-          alt="right coin"
-          className={styles.right_coin}
-        />
+        {mainImageLoaded && (
+          <>
+            <img
+              src="/left_coin.png"
+              alt="left coin"
+              className={styles.left_coin}
+            />
+            <img
+              src="/right_coin.png"
+              alt="right coin"
+              className={styles.right_coin}
+            />
+          </>
+        )}
       </div>
       <div ref={contentsSectionRef} className={styles.contents_section}>
         <img
