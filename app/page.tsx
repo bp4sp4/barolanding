@@ -358,8 +358,9 @@ export default function Home() {
         <h2 className={styles.review_title}>실제 대표님들의 후기</h2>
         <Swiper
           modules={[Navigation, Pagination]}
-          spaceBetween={20}
-          slidesPerView={1}
+          spaceBetween={16}
+          slidesPerView={1.5}
+          centeredSlides={true}
           navigation
           pagination={{ clickable: true }}
           className={styles.reviews_scroll}
