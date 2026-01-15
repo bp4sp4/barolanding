@@ -261,6 +261,7 @@
   height: auto;
   box-sizing: border-box;
   flex-shrink: 0;
+  width: auto;
 }
 
 .reviews_scroll :global(.swiper-button-next),
@@ -285,17 +286,24 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--unit-7, 24px);
-  border-radius: 10px;
+  border-radius: 12px;
   flex-shrink: 0;
   scroll-snap-align: start;
   box-sizing: border-box;
-  padding: 0 20px;
   overflow: hidden;
+  background-color: #fff;
+}
+
+.reviews_scroll :global(.swiper-slide:not(:last-child)) .review_container {
+  margin-right: 8px;
 }
 
 .review_item {
+  width: 343px;
+  height: 471px;
   display: block;
   object-fit: cover;
+  border-radius: 12px;
 }
 
 .footer {
@@ -344,7 +352,7 @@
 
 .floating_banner {
   position: fixed;
-  bottom: 50px;
+  bottom: 0px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
