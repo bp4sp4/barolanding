@@ -164,7 +164,10 @@ export default function Home() {
   }, []);
 
   // utm_source를 한글 형식으로 변환
-  const formatClickSource = (utmSource: string, materialId: string | null): string => {
+  const formatClickSource = (
+    utmSource: string,
+    materialId: string | null
+  ): string => {
     const sourceMap: { [key: string]: string } = {
       daangn: "당근마켓",
       insta: "인스타그램",
@@ -320,7 +323,15 @@ export default function Home() {
         )}
       </div>
       <div className={styles.content}>
-        <div className={styles.main_gif}></div>
+        <Image
+          src="/main.gif"
+          alt="main animation"
+          width={467}
+          height={467}
+          className={styles.main_gif}
+          unoptimized={true}
+          priority
+        />
         <img
           src="/left_coin.png"
           alt="left coin"
@@ -415,16 +426,7 @@ export default function Home() {
       </footer>
       {showFloatingBanner && (
         <div className={styles.floating_banner}>
-          <button
-            onClick={scrollToFooter}
-            className={`${styles.floating_button} ${styles.floating_button_blue}`}
-          >
-            무료상담 신청하기
-          </button>
-          <button
-            onClick={scrollToFooter}
-            className={`${styles.floating_button} ${styles.floating_button_dark}`}
-          >
+          <button onClick={scrollToFooter} className={styles.floating_button}>
             무료상담 신청하기
           </button>
         </div>
