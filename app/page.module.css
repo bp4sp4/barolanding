@@ -2,11 +2,13 @@
   display: flex;
   max-width: 768px;
   width: 100%;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 60px;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+  position: relative;
 }
 
 .baro_logo {
@@ -239,12 +241,16 @@
   width: 100%;
   align-self: stretch;
   padding-bottom: 50px;
+  display: flex;
+  justify-content: center;
 }
 
 .reviews_scroll :global(.swiper) {
   width: 100%;
+  max-width: 100%;
   padding-bottom: 50px;
-  overflow: hidden;
+  overflow: visible;
+  margin: 0 auto;
 }
 
 .reviews_scroll :global(.swiper-wrapper) {
@@ -252,6 +258,35 @@
   align-items: stretch;
   box-sizing: border-box;
   width: 100%;
+  overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .reviews_scroll {
+    overflow-x: hidden;
+  }
+
+  .reviews_scroll :global(.swiper) {
+    overflow: visible;
+  }
+
+  .reviews_scroll :global(.swiper-wrapper) {
+    overflow: visible;
+  }
+}
+
+@media (min-width: 1280px) {
+  .reviews_scroll {
+    overflow-x: hidden;
+  }
+
+  .reviews_scroll :global(.swiper) {
+    overflow: visible;
+  }
+
+  .reviews_scroll :global(.swiper-wrapper) {
+    overflow: visible;
+  }
 }
 
 .reviews_scroll :global(.swiper-slide) {

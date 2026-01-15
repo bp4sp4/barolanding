@@ -368,10 +368,27 @@ export default function Home() {
             375: {
               slidesPerView: 1.2,
               spaceBetween: 80,
+              centeredSlides: true,
             },
             480: {
               slidesPerView: 1.2,
               spaceBetween: 10,
+              centeredSlides: true,
+            },
+            768: {
+              slidesPerView: 2,
+              spaceBetween: 16,
+              centeredSlides: false,
+            },
+            1024: {
+              slidesPerView: 2,
+              spaceBetween: 20,
+              centeredSlides: false,
+            },
+            1280: {
+              slidesPerView: 2.3,
+              spaceBetween: 24,
+              centeredSlides: false,
             },
           }}
         >
