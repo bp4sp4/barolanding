@@ -10,17 +10,14 @@ export default function DaangnMaterialRedirect() {
   useEffect(() => {
     const materialId = params.id as string;
 
-    // 소재 번호가 1~6 사이인지 확인
-    const validIds = ["1", "2", "3", "4", "5", "6"];
-    const isValidId = validIds.includes(materialId);
-
-    if (isValidId) {
-      // 소재 번호를 포함하여 메인 페이지로 리다이렉트
+    // materialId가 있으면 그대로 사용 (숫자, 문자열 모두 허용)
+    if (materialId) {
+      // 소재 번호/이름을 포함하여 메인 페이지로 리다이렉트
       router.replace(
         `/?utm_source=daangn&utm_medium=social&utm_campaign=material_${materialId}&material_id=${materialId}`
       );
     } else {
-      // 유효하지 않은 소재 번호면 일반 당근 페이지로 리다이렉트
+      // materialId가 없으면 일반 당근 페이지로 리다이렉트
       router.replace(
         "/?utm_source=daangn&utm_medium=social&utm_campaign=recruitment"
       );
