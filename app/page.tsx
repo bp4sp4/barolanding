@@ -20,6 +20,16 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [clickSource, setClickSource] = useState<string>("");
   const footerRef = useRef<HTMLElement>(null);
+  const contentsSectionRef = useRef<HTMLDivElement>(null);
+  const contentsSectionBlueRef = useRef<HTMLDivElement>(null);
+  const contentsIconsWrapperRef = useRef<HTMLDivElement>(null);
+  const newSectionRef = useRef<HTMLDivElement>(null);
+  const contentsImage1Ref = useRef<HTMLImageElement>(null);
+  const contentsImage2Ref = useRef<HTMLImageElement>(null);
+  const contentsImage3Ref = useRef<HTMLImageElement>(null);
+  const reviewImage1Ref = useRef<HTMLDivElement>(null);
+  const reviewImage2Ref = useRef<HTMLDivElement>(null);
+  const reviewImage3Ref = useRef<HTMLDivElement>(null);
 
   // 연락처 포맷팅 함수 (010-XXXX-XXXX)
   const formatPhoneNumber = (value: string) => {
@@ -253,6 +263,98 @@ export default function Home() {
     };
   }, []);
 
+  // 섹션 애니메이션을 위한 Intersection Observer
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: "0px 0px -50px 0px",
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("fadeInUp");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const sections = [
+      contentsSectionRef.current,
+      contentsSectionBlueRef.current,
+      contentsIconsWrapperRef.current,
+      newSectionRef.current,
+    ].filter(Boolean);
+
+    sections.forEach((section) => {
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => {
+      sections.forEach((section) => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      });
+    };
+  }, []);
+
+  // 이미지 개별 애니메이션을 위한 Intersection Observer
+  useEffect(() => {
+    const imageObserverOptions = {
+      threshold: 0.01,
+      rootMargin: "0px 0px 0px 0px",
+    };
+
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add("fadeInUp");
+          }, 100);
+          imageObserver.unobserve(entry.target);
+        }
+      });
+    }, imageObserverOptions);
+
+    // 약간의 지연 후 observer 시작 (컴포넌트가 완전히 렌더링된 후)
+    const timer = setTimeout(() => {
+      const images = [
+        contentsImage1Ref.current,
+        contentsImage2Ref.current,
+        contentsImage3Ref.current,
+        reviewImage1Ref.current,
+        reviewImage2Ref.current,
+        reviewImage3Ref.current,
+      ].filter(Boolean);
+
+      images.forEach((image) => {
+        if (image) {
+          imageObserver.observe(image);
+        }
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      const images = [
+        contentsImage1Ref.current,
+        contentsImage2Ref.current,
+        contentsImage3Ref.current,
+        reviewImage1Ref.current,
+        reviewImage2Ref.current,
+        reviewImage3Ref.current,
+      ].filter(Boolean);
+      images.forEach((image) => {
+        if (image) {
+          imageObserver.unobserve(image);
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className={styles.layout_wrapper}>
       <div className={styles.header_gnb}>
@@ -343,14 +445,76 @@ export default function Home() {
           className={styles.right_coin}
         />
       </div>
-      <div className={styles.contents_section}>
+      <div ref={contentsSectionRef} className={styles.contents_section}>
         <img
-          src="/contents.png"
+          src="/contents_001.png"
           alt="contents"
           className={styles.contents_image}
         />
       </div>
-      <div className={styles.new_section}>
+      <div
+        ref={contentsSectionBlueRef}
+        className={styles.contents_section_blue}
+      >
+        <p className={styles.contents_text}>이런 대표님들 모두</p>
+        <p className={styles.contents_button}>정책자금 확보 가능합니다</p>
+        <div className={styles.contents_images}>
+          <img
+            ref={contentsImage1Ref}
+            src="/contents_01_001.png"
+            alt="contents 01"
+            className={styles.contents_image_slot}
+          />
+          <img
+            ref={contentsImage2Ref}
+            src="/contents_01_002.png"
+            alt="contents 02"
+            className={styles.contents_image_slot}
+          />
+          <img
+            ref={contentsImage3Ref}
+            src="/contents_01_003.png"
+            alt="contents 03"
+            className={styles.contents_image_slot}
+          />
+        </div>
+      </div>
+      <div
+        ref={contentsIconsWrapperRef}
+        className={styles.contents_icons_wrapper}
+      >
+        <p className={styles.contents_subtitle}>
+          한평생 바로기업에서 모두 찾아드립니다.
+        </p>
+        <h2 className={styles.contents_main_title}>
+          대표님들이 바로기업을 찾는 이유
+        </h2>
+        <div className={styles.contents_content_wrapper}>
+          <div className={styles.contents_images_wrapper}>
+            <img
+              src="/contents_02_001.png"
+              alt="높은 승인률"
+              className={styles.contents_icon}
+            />
+            <img
+              src="/contents_02_002.png"
+              alt="빠른 처리"
+              className={styles.contents_icon}
+            />
+            <img
+              src="/contents_02_003.png"
+              alt="정확한 컨설팅"
+              className={styles.contents_icon}
+            />
+            <img
+              src="/contents_02_004.png"
+              alt="최대 혜택"
+              className={styles.contents_icon}
+            />
+          </div>
+        </div>
+      </div>
+      <div ref={newSectionRef} className={styles.new_section}>
         <div className={styles.star_image}></div>
         <p className={styles.review_text}>
           한평생 바로기업은 결과로 보여드립니다.
@@ -398,7 +562,7 @@ export default function Home() {
           }}
         >
           <SwiperSlide>
-            <div className={styles.review_container}>
+            <div ref={reviewImage1Ref} className={styles.review_container}>
               <img
                 src="/review_01.png"
                 alt="review 01"
@@ -407,7 +571,7 @@ export default function Home() {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className={styles.review_container}>
+            <div ref={reviewImage2Ref} className={styles.review_container}>
               <img
                 src="/review_02.png"
                 alt="review 02"
@@ -416,7 +580,7 @@ export default function Home() {
             </div>
           </SwiperSlide>
           <SwiperSlide>
-            <div className={styles.review_container}>
+            <div ref={reviewImage3Ref} className={styles.review_container}>
               <img
                 src="/review_03.png"
                 alt="review 03"
