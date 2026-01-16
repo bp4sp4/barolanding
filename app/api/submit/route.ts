@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { sendConsultationEmail } from '@/lib/email'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -66,6 +67,18 @@ export async function POST(request: NextRequest) {
         { error: '데이터 저장 중 오류가 발생했습니다.' },
         { status: 500 }
       )
+    }
+
+    // 이메일 알림 전송 (비동기, 실패해도 상담 신청은 성공 처리)
+    if (process.env.NAVER_EMAIL && process.env.NAVER_APP_PASSWORD) {
+      sendConsultationEmail({
+        name,
+        contact,
+        click_source: clickSource || null,
+      }).catch((emailError) => {
+        console.error("Failed to send email notification:", emailError);
+        // 이메일 실패는 로그만 남기고 사용자에게는 에러를 반환하지 않음
+      });
     }
 
     return NextResponse.json(

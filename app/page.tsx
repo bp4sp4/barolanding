@@ -497,8 +497,12 @@ export default function Home() {
         ref={contentsSectionBlueRef}
         className={styles.contents_section_blue}
       >
-        <p ref={contentsTextRef} className={styles.contents_text}>이런 대표님들 모두</p>
-        <p ref={contentsButtonRef} className={styles.contents_button}>정책자금 확보 가능합니다</p>
+        <p ref={contentsTextRef} className={styles.contents_text}>
+          이런 대표님들 모두
+        </p>
+        <p ref={contentsButtonRef} className={styles.contents_button}>
+          정책자금 확보 가능합니다
+        </p>
         <div className={styles.contents_images}>
           <img
             ref={contentsImage1Ref}
@@ -657,7 +661,7 @@ export default function Home() {
         </h2>
         <button
           className={styles.footer_button}
-          onClick={() => handleOpenModal("footer")}
+          onClick={() => handleOpenModal("랜딩페이지")}
         >
           무료상담 신청하기
         </button>
