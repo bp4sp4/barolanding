@@ -8,27 +8,30 @@ function createTransporter() {
     throw new Error("NAVER_EMAIL or NAVER_APP_PASSWORD not configured");
   }
 
-  // 배포 환경(서버리스)에서 포트 465가 차단될 수 있으므로 포트 587(STARTTLS) 사용
-  // 네이버는 두 포트 모두 지원하지만, 서버리스 환경에서는 587이 더 안정적
+  // 네이버 공식 설정: 포트 465, 보안 연결(SSL) 필요
+  // 서버리스 환경에서도 네이버의 공식 포트 사용
   return nodemailer.createTransport({
     host: "smtp.naver.com",
-    port: 587, // STARTTLS 사용 (서버리스 환경에서 더 안정적)
-    secure: false, // STARTTLS는 secure: false
-    requireTLS: true, // TLS 필수
+    port: 465, // 네이버 공식 포트 (SSL 필요)
+    secure: true, // SSL 사용 (네이버 공식 설정)
     auth: {
       user: process.env.NAVER_EMAIL, // 네이버 이메일 주소
       pass: process.env.NAVER_APP_PASSWORD, // 네이버 앱 비밀번호
     },
     // 배포 환경에서 연결 안정성을 위한 설정
-    connectionTimeout: 15000, // 15초로 증가
-    greetingTimeout: 15000, // 15초로 증가
-    socketTimeout: 15000, // 15초로 증가
+    connectionTimeout: 20000, // 20초로 증가
+    greetingTimeout: 20000, // 20초로 증가
+    socketTimeout: 20000, // 20초로 증가
     debug: false, // 디버그 모드 비활성화
     logger: false, // 로거 비활성화
+    pool: true, // 연결 풀 사용 (재사용)
+    maxConnections: 1, // 최대 연결 수
+    maxMessages: 3, // 연결당 최대 메시지 수
     tls: {
-      // TLS 설정
+      // TLS/SSL 설정
       rejectUnauthorized: true,
       minVersion: "TLSv1.2",
+      ciphers: "SSLv3", // 호환성을 위한 설정
     },
   });
 }
