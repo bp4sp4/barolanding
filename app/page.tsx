@@ -585,25 +585,25 @@ export default function Home() {
             지금 당장 바꾸실 필요는 없습니다.
           </h2>
           <h2 className={styles.summary_title}>
-            지금 쓰는 대출을
-            <br />{" "}
+            지금&nbsp;
             <span className={styles.summary_title_bold}>
-              그대로 두셔도 되는지만 한 번
+              부채상태를
+              <br /> 그대로 두셔도 되는지만 한 번<br />
             </span>
-            <br /> 확인해 보세요.
+            확인해 보세요.
           </h2>
         </div>
         <button
           className={styles.footer_button}
           onClick={() => handleOpenModal("50대남성-랜딩페이지")}
         >
-          지금 대출, 괜찮은지 확인하기
+          내 부채상태 괜찮은지 확인하기
         </button>
       </footer>
       {showFloatingBanner && (
         <div className={styles.floating_banner}>
           <button onClick={scrollToFooter} className={styles.floating_button}>
-            지금 대출, 괜찮은지 확인하기
+            내 부채상태 괜찮은지 확인하기
           </button>
         </div>
       )}
