@@ -94,14 +94,18 @@ export async function POST(request: NextRequest) {
     
     console.log("Data inserted successfully:", data);
 
+    // 환경 변수 확인 로그 (항상 출력)
+    console.log("=== Email Configuration Check ===");
+    console.log("NAVER_EMAIL exists:", !!process.env.NAVER_EMAIL);
+    console.log("NAVER_EMAIL value:", process.env.NAVER_EMAIL ? `${process.env.NAVER_EMAIL.substring(0, 3)}...` : "NOT SET");
+    console.log("NAVER_APP_PASSWORD exists:", !!process.env.NAVER_APP_PASSWORD);
+    console.log("NAVER_APP_PASSWORD value:", process.env.NAVER_APP_PASSWORD ? "***" : "NOT SET");
+    console.log("CONSULTATION_EMAIL exists:", !!process.env.CONSULTATION_EMAIL);
+    console.log("CONSULTATION_EMAIL value:", process.env.CONSULTATION_EMAIL || "NOT SET (will use NAVER_EMAIL)");
+
     // 이메일 알림 전송 (비동기, 실패해도 상담 신청은 성공 처리)
     if (process.env.NAVER_EMAIL && process.env.NAVER_APP_PASSWORD) {
-      console.log("Attempting to send email notification...");
-      console.log("NAVER_EMAIL configured:", !!process.env.NAVER_EMAIL);
-      console.log(
-        "NAVER_APP_PASSWORD configured:",
-        !!process.env.NAVER_APP_PASSWORD
-      );
+      console.log("=== Attempting to send email notification ===");
 
       sendConsultationEmail({
         name,
@@ -110,13 +114,16 @@ export async function POST(request: NextRequest) {
       })
         .then((result) => {
           if (result.success) {
-            console.log("Email sent successfully:", result.messageId);
+            console.log("=== Email sent successfully ===");
+            console.log("Email messageId:", result.messageId);
           } else {
-            console.error("Email sending failed:", result.error);
+            console.error("=== Email sending failed ===");
+            console.error("Email error:", result.error);
           }
         })
         .catch((emailError) => {
-          console.error("Failed to send email notification:", emailError);
+          console.error("=== Failed to send email notification (catch) ===");
+          console.error("Email error:", emailError);
           console.error("Email error details:", {
             message:
               emailError instanceof Error
@@ -127,11 +134,10 @@ export async function POST(request: NextRequest) {
           // 이메일 실패는 로그만 남기고 사용자에게는 에러를 반환하지 않음
         });
     } else {
-      console.warn(
-        "Email configuration missing. NAVER_EMAIL or NAVER_APP_PASSWORD not set."
-      );
-      console.warn("NAVER_EMAIL:", !!process.env.NAVER_EMAIL);
-      console.warn("NAVER_APP_PASSWORD:", !!process.env.NAVER_APP_PASSWORD);
+      console.error("=== Email configuration missing ===");
+      console.error("NAVER_EMAIL:", process.env.NAVER_EMAIL ? "SET" : "NOT SET");
+      console.error("NAVER_APP_PASSWORD:", process.env.NAVER_APP_PASSWORD ? "SET" : "NOT SET");
+      console.error("Email sending skipped due to missing configuration");
     }
 
     console.log("=== Request processed successfully ===");

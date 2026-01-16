@@ -16,6 +16,17 @@ function createTransporter() {
       user: process.env.NAVER_EMAIL, // 네이버 이메일 주소
       pass: process.env.NAVER_APP_PASSWORD, // 네이버 앱 비밀번호
     },
+    // 배포 환경에서 연결 안정성을 위한 설정
+    connectionTimeout: 10000, // 10초
+    greetingTimeout: 10000, // 10초
+    socketTimeout: 10000, // 10초
+    debug: false, // 디버그 모드 비활성화 (로그 너무 많이 나오는 것 방지)
+    logger: false, // 로거 비활성화
+    tls: {
+      // TLS 설정 강화
+      rejectUnauthorized: true,
+      minVersion: "TLSv1.2",
+    },
   });
 }
 
@@ -59,23 +70,23 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
     });
 
     // Transporter 생성 및 연결 검증
+    // 배포 환경에서 verify()가 실패할 수 있으므로 직접 전송 시도
     const transporter = createTransporter();
-    console.log("Transporter created, verifying connection...");
-    
-    try {
-      await transporter.verify();
-      console.log("SMTP connection verified successfully");
-    } catch (verifyError) {
-      console.error("SMTP connection verification failed:", verifyError);
-      throw new Error(`SMTP verification failed: ${verifyError instanceof Error ? verifyError.message : String(verifyError)}`);
-    }
+    console.log("Transporter created");
+
+    // verify는 배포 환경에서 타임아웃될 수 있으므로 스킵하고 바로 전송 시도
+    // verify()를 호출하면 "Greeting never received" 에러가 발생할 수 있음
+    // 대신 직접 sendMail을 시도하고, 실패하면 그때 에러 처리
+    console.log(
+      "Skipping SMTP verify (can cause timeout in serverless environments)"
+    );
 
     // 로고 이미지를 attachments로 첨부하고 cid로 인라인 표시
     // 배포 환경에서 파일 경로가 다를 수 있으므로 여러 경로 시도
     // 로고 파일이 없어도 이메일은 정상 전송되도록 에러를 잡아서 처리
     let attachments: any[] = [];
     let logoCid = "";
-    
+
     try {
       const possibleLogoPaths = [
         path.join(process.cwd(), "public", "logo_black.png"),
@@ -107,11 +118,16 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
       }
 
       if (!logoFound) {
-        console.warn("Logo file not found in any of the attempted paths, continuing without logo");
+        console.warn(
+          "Logo file not found in any of the attempted paths, continuing without logo"
+        );
       }
     } catch (logoError) {
       // 로고 파일 처리 중 에러가 발생해도 이메일 전송은 계속
-      console.warn("Error processing logo file, continuing without logo:", logoError);
+      console.warn(
+        "Error processing logo file, continuing without logo:",
+        logoError
+      );
     }
 
     const mailOptions = {
