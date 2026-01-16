@@ -305,7 +305,7 @@ export default function Home() {
   useEffect(() => {
     const observerOptions = {
       threshold: 0.05,
-      rootMargin: "0px 0px -150px 0px",
+      rootMargin: "0px 0px 0px 0px",
     };
 
     const observer = new IntersectionObserver((entries) => {
