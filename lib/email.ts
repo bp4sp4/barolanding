@@ -71,22 +71,41 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
     }
 
     // 로고 이미지를 attachments로 첨부하고 cid로 인라인 표시
+    // 배포 환경에서 파일 경로가 다를 수 있으므로 여러 경로 시도
     let attachments: any[] = [];
     let logoCid = "";
-    try {
-      const logoPath = path.join(process.cwd(), "public", "logo_black.png");
-      if (fs.existsSync(logoPath)) {
-        logoCid = "logo_black";
-        attachments.push({
-          filename: "logo_black.png",
-          path: logoPath,
-          cid: logoCid, // Content-ID로 참조
-        });
-      } else {
-        console.warn("Logo file not found, skipping logo in email");
+    
+    const possibleLogoPaths = [
+      path.join(process.cwd(), "public", "logo_black.png"),
+      path.join(process.cwd(), ".next", "static", "logo_black.png"),
+      path.join(process.cwd(), "logo_black.png"),
+      path.join(__dirname, "..", "..", "public", "logo_black.png"),
+    ];
+
+    console.log("Current working directory:", process.cwd());
+    console.log("Trying logo paths:", possibleLogoPaths);
+
+    let logoFound = false;
+    for (const logoPath of possibleLogoPaths) {
+      try {
+        if (fs.existsSync(logoPath)) {
+          console.log("Logo file found at:", logoPath);
+          logoCid = "logo_black";
+          attachments.push({
+            filename: "logo_black.png",
+            path: logoPath,
+            cid: logoCid, // Content-ID로 참조
+          });
+          logoFound = true;
+          break;
+        }
+      } catch (error) {
+        console.warn(`Failed to check logo path ${logoPath}:`, error);
       }
-    } catch (error) {
-      console.warn("Failed to read logo file:", error);
+    }
+
+    if (!logoFound) {
+      console.warn("Logo file not found in any of the attempted paths, continuing without logo");
     }
 
     const mailOptions = {
