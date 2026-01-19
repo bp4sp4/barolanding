@@ -595,7 +595,7 @@ export default function Home() {
         </div>
         <button
           className={styles.footer_button}
-          onClick={() => handleOpenModal("50대남성-랜딩페이지")}
+          onClick={() => handleOpenModal("40~50대남성-랜딩페이지")}
         >
           내 부채상태 괜찮은지 확인하기
         </button>
