@@ -29,6 +29,30 @@ function createTransporter() {
   });
 }
 
+// 한국 시간(KST, UTC+9)으로 변환하는 함수
+function getKoreanTime(): string {
+  const now = new Date();
+  
+  // Asia/Seoul 타임존으로 변환
+  const koreanTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+  
+  // 한국 시간 형식으로 포맷팅: "2026. 1. 20. 오전 7:30:34"
+  const year = koreanTime.getFullYear();
+  const month = koreanTime.getMonth() + 1;
+  const day = koreanTime.getDate();
+  const hours = koreanTime.getHours();
+  const minutes = koreanTime.getMinutes();
+  const seconds = koreanTime.getSeconds();
+  
+  const ampm = hours < 12 ? "오전" : "오후";
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const formattedSeconds = seconds.toString().padStart(2, "0");
+  
+  return `${year}. ${month}. ${day}. ${ampm} ${displayHours}:${formattedMinutes}:${formattedSeconds}`;
+}
+
 export async function sendConsultationEmail(data: ConsultationEmailData) {
   console.log("[EMAIL] sendConsultationEmail 함수 시작");
   console.log(
@@ -37,6 +61,8 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
   );
 
   try {
+    // 한국 시간 가져오기
+    const koreanTime = getKoreanTime();
     // Brevo 설정 확인
     const smtpLogin = process.env.BREVO_SMTP_LOGIN;
     const smtpKey = process.env.BREVO_SMTP_KEY;
@@ -153,9 +179,7 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
               </tr>
               <tr style="border-top: 1px solid #ebedf0;">
                 <td style="padding-top: 20px; font-size: 14px; color: #8b95a1;">신청 시각</td>
-                <td style="padding-top: 20px; font-size: 14px; color: #8b95a1; text-align: right;">${new Date().toLocaleString(
-                  "ko-KR"
-                )}</td>
+                <td style="padding-top: 20px; font-size: 14px; color: #8b95a1; text-align: right;">${koreanTime}</td>
               </tr>
             </table>
           </div>
@@ -184,7 +208,7 @@ export async function sendConsultationEmail(data: ConsultationEmailData) {
 이름(회사명): ${data.name}
 연락처: ${data.contact}
 유입 경로: ${data.click_source || "바로기업 홈페이지"}
-신청 시간: ${new Date().toLocaleString("ko-KR")}
+신청 시간: ${koreanTime}
     `;
 
     // 이메일 전송

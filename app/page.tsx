@@ -224,7 +224,7 @@ export default function Home() {
     };
   
     const shortSource = sourceMap[utmSource] || utmSource;
-    const homepageName = "바로폼";
+    const homepageName = "40~50대남성";
   
     if (materialId) {
       return `${homepageName}_${shortSource}_소재_${materialId}`;
