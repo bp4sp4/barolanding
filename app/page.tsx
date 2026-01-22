@@ -20,7 +20,6 @@ export default function Home() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [clickSource, setClickSource] = useState<string>("");
-  const [contactError, setContactError] = useState<string>("");
   const footerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const contentsSectionRef = useRef<HTMLDivElement>(null);
@@ -60,20 +59,6 @@ export default function Home() {
   const handleContactChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
     setFormData({ ...formData, contact: formatted });
-    
-    // 실시간 유효성 검사
-    const phoneNumbers = formatted.replace(/[^\d]/g, "");
-    if (phoneNumbers.length > 0) {
-      if (phoneNumbers.length < 10) {
-        setContactError("올바른 연락처를 입력해주세요. (010-XXXX-XXXX)");
-      } else if (!phoneNumbers.startsWith("010")) {
-        setContactError("연락처는 010으로 시작해야 합니다. (010-XXXX-XXXX)");
-      } else {
-        setContactError("");
-      }
-    } else {
-      setContactError("");
-    }
   };
 
   // 폼 유효성 검사
@@ -84,7 +69,6 @@ export default function Home() {
 
   const handleCloseModal = () => {
     // 배경 클릭 시 그냥 닫기만
-    setContactError(""); // 모달 닫을 때 에러 초기화
     setShowModal(false);
   };
 
@@ -106,22 +90,6 @@ export default function Home() {
       alert("이름과 연락처를 입력해주세요.");
       return;
     }
-
-    // 연락처 유효성 검사
-    const phoneNumbers = formData.contact.replace(/[^\d]/g, "");
-    if (phoneNumbers.length < 10) {
-      setContactError("올바른 연락처를 입력해주세요. (010-XXXX-XXXX)");
-      return;
-    }
-    
-    // 010으로 시작하는지 확인
-    if (!phoneNumbers.startsWith("010")) {
-      setContactError("연락처는 010으로 시작해야 합니다. (010-XXXX-XXXX)");
-      return;
-    }
-    
-    // 유효성 검사 통과 시 에러 초기화
-    setContactError("");
 
     setIsSubmitting(true);
 
@@ -152,7 +120,6 @@ export default function Home() {
       // 폼 초기화
       setFormData({ name: "", contact: "" });
       setPrivacyAgreed(false);
-      setContactError(""); // 에러 메시지 초기화
       setClickSource(""); // 추적 정보 초기화
     } catch (error) {
       console.error("Submit error:", error);
@@ -295,7 +262,6 @@ export default function Home() {
       // 추적하지 않는 경우 (헤더 클릭 등)
       setClickSource("");
     }
-    setContactError(""); // 모달 열 때 에러 초기화
     setShowModal(true);
   };
 
@@ -690,9 +656,6 @@ export default function Home() {
                 maxLength={13}
                 required
               />
-              {contactError && (
-                <p className={styles.modal_error}>{contactError}</p>
-              )}
             </form>
             <div className={styles.modal_privacy}>
               <span className={styles.modal_privacy_text}>
